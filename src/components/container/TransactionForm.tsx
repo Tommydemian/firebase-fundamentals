@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAddTransaction } from '../../hooks/useAddTransaction';
+// Components
+import { LoadingSpinner } from '../UI/LoadingSpinner';
 
-type Props = {
-    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-    description: string;
-    setDescription: React.Dispatch<React.SetStateAction<string>>;
-    amount: number;
-    setAmount: React.Dispatch<React.SetStateAction<number>>;
-    type: string;
-    setType: React.Dispatch<React.SetStateAction<'expense' | 'income'>>;
-}
-
-export const TransactionForm: React.FC<Props> = ({ onSubmit, description, setDescription, amount, setAmount, type, setType }) => {
+export const TransactionForm: React.FC = () => {
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [type, setType] = useState<'expense' | 'income'>('expense');
 
   // currying to handleChange
   const handleChange = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (e: React.ChangeEvent<HTMLInputElement> ) => {
     setter(e.target.value as unknown as T); 
   };
+
+  const { addTransaction, isLoading } = useAddTransaction({ description, transactionAmount: amount, transactionType: type });
+
+  const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addTransaction();
+  };
+
+  if (isLoading) { 
+    return <LoadingSpinner loading={isLoading} />;
+  }
 
   return (
     <form className="add-transaction" onSubmit={onSubmit}>
