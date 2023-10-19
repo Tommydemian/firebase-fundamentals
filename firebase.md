@@ -49,3 +49,78 @@ export const db = getFirestore(app);
 in case you want to add document
 9. hooks/useAdd{Name} 
 
+
+----------------------------------------------------------------------------------------------------------------------------------
+# GENERAL:
+Hooks to add document, get document and recover user data from localStorage => `I should learn how to use indexedDb`
+----------------------------------------------------------------------------------------------------------------------------------
+
+### patron comun en firebase/firestore:
+ Si vas a interactuar con firestore (database) vas a necesitar la var `db` y la var `collection[name]Ref`
+
+ letz c this case of GET from DB:
+
+ ```typescript
+ import { useState, useEffect } from 'react';
+import { query, collection, where, orderBy, onSnapshot, Unsubscribe } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import { useGetUserInfo } from '../hooks/useGetUserInfo';
+import { Transaction } from '../types/index';
+
+export const useGetTransactions = () => {
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+    const transactionCollectionRef = collection(db, 'transactions');
+    const { authObject } = useGetUserInfo();
+
+    const getTransactions = () => {
+        let unsubscribe: Unsubscribe;
+        try {
+            const transactionQuery = query(
+                transactionCollectionRef,
+                 where("userID", "==", authObject?.userID),
+                 orderBy("createdAt") 
+                 );
+
+                 unsubscribe = onSnapshot(transactionQuery,(snapShot) => {
+
+                    const docs: Transaction[] = []; 
+
+                    console.log(snapShot);
+                    snapShot.forEach((doc) => {
+                        const data = doc.data();
+                        const id = doc.id;
+
+                        docs.push({ ...data, id } as Transaction);
+                    });
+
+                    setTransactions(docs);
+                 });
+                
+        } catch (e) {
+            const error = e as Error;
+            console.error(error.message);   
+        }
+        return () => unsubscribe && unsubscribe();
+    };
+
+    useEffect(() => {
+      getTransactions();
+    }, []);
+    
+    return { transactions }; 
+};
+ ```
+
+ patron comun: 
+ ```javascript
+import { query, collection, where, orderBy, onSnapshot, Unsubscribe } from 'firebase/firestore';
+import { db } from '../config/firebase';  // db es una instancia configurada de Firestore
+ ```
+Necesitas importas db from firebase config y todo lo que vayas a usar from firebase/firestore
+
+In this case:
+1. query => la func query() *construye y retorna la referencia a una consulta*. **No la ejecuta. Es la query per se**
+2. `where`/`orderBy` => funciones utilizadas dentro de `query` para filtrar y ordenar los documentos en la consulta, respectivamente.
+3. `onSnapshot` => establece un observador en tiempo real y te permite responder a los cambios. A diferencia de **getDocs** no es Async
+4. `Unsubscribe` => Función retornada por `onSnapshot` que puedes llamar para dejar de escuchar los cambios y evitar fugas de memoria o pérdidas de rendimiento.

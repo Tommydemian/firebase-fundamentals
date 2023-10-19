@@ -4,6 +4,7 @@ import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Compoents
 import { TransactionForm } from '../../components/UI/TransactionForm';
 import { LoadingSpinner } from '../../components/UI/LoadingSpinner';
+import { TransactionList } from '../../components/UI/TransactionList';
  
 export const ExpenseTracker = () => { 
   const [description, setDescription] = useState('');
@@ -50,9 +51,8 @@ export const ExpenseTracker = () => {
         setType={setType} />
       </div>
       </div>
-     <div className="transactions">
-      <h3>Transactions</h3>
-     </div>
+      {/* Display transactions */}
+      <TransactionList />
       </>
   );
 };
