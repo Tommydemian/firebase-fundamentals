@@ -26,3 +26,12 @@ If you are developing a production application, we recommend updating the config
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
+# IDB: 
+IndexedDb: 
+- It's a no sequel data store 
+- it store Javascript objects and bytes
+- Every entry has a key
+- API is ASynchronous
+- when storing objects => IDB clones them, and clonning happens synchronously => performance penalty will only be a thing if you store **large** objects 
+- API es event-based => you can wrap it into a promise-based API
+- it supports versioning - *not relevant*

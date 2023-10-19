@@ -14,5 +14,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'semi': ['error', 'always'], // Enforce semicolons
+    'object-curly-spacing': ['error', 'always'], // Enforce spacing within curly braces
   },
 }
