@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useGetTransactions } from '../../hooks/useGetTransactions';
 import { Transaction } from '../../types/index';
 // components
@@ -6,8 +7,13 @@ import { LoadingSpinner } from './LoadingSpinner';
 export const TransactionList = () => {
   const { transactions, isLoading } = useGetTransactions();
 
+  useEffect(() => {
+    console.log(isLoading);
+  },[isLoading]);
+
   if (isLoading) {
-    return <LoadingSpinner loading={isLoading} />;
+    //return <LoadingSpinner loading={isLoading} />;
+    return 'loading';
   }
 
   return (

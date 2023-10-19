@@ -19,9 +19,11 @@ export const useGetTransactions = () => {
 
     // function to get transactions from the database
     const getTransactions = () => {
-        setIsLoading(true);
         let unsubscribe: Unsubscribe;
+        setIsLoading(true);
         try {
+            console.log(isLoading, 'isLoadingVal');
+            
             const transactionQuery = query(
                 transactionCollectionRef,
                  where("userID", "==", authObject?.userID),
