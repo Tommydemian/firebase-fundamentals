@@ -15,6 +15,7 @@ export const ExpenseTracker = () => {
         {
           authObject?.profilePhoto && <img src={authObject.profilePhoto} alt="profile-picture" style={{ borderRadius: '100%', float: 'right', cursor: 'pointer' }} />
         }
+        <button onClick={signUserOut}>Sign Out</button>
         <h1>{authObject?.name} Expense Tracker</h1>
         <TransactionCreator />
       </div>
