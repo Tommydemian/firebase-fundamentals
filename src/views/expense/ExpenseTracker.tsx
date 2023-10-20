@@ -1,5 +1,5 @@
 // Compoents
-import { TransactionForm } from '../../components/container/TransactionForm';
+import { TransactionCreator } from '../../components/container/TransactionCreator';
 import { TransactionList } from '../../components/UI/TransactionList';
 // Hooks
 import { useGetUserInfo } from '../../hooks/useGetUserInfo';
@@ -11,26 +11,14 @@ export const ExpenseTracker = () => {
   return (
     <>
     <div className='expense-tracker'>
-      <div className='container'>
+      <div className='container' style={{ border: '1px solid red' }}>
+        {
+          authObject?.profilePhoto && <img src={authObject.profilePhoto} alt="profile-picture" style={{ borderRadius: '100%', float: 'right', cursor: 'pointer' }} />
+        }
         <h1>{authObject?.name} Expense Tracker</h1>
-        <div className='balance'>
-          <h3>Your Balance:</h3>
-          <h2>$0.00</h2>
-        </div>
-        <div className="summary">
-          <div className="income">
-            <h4>Income:</h4>
-            <p>0.00</p>
-          </div>
-          <div className="expenses">
-            <h4>Expenses:</h4>
-            <p>0.00</p>
-          </div>
-        </div>
-        <TransactionForm />
+        <TransactionCreator />
       </div>
       </div>
-      {/* Display transactions */}
       <TransactionList />
       </>
   );

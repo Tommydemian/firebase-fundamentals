@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useGetTransactions } from '../../hooks/useGetTransactions';
 import { Transaction } from '../../types/index';
 // components
-// import { LoadingSpinner } from './LoadingSpinner';
+import { LoadingSpinner } from './LoadingSpinner';
 import styles from './transaction-list.module.css';
 
 export const TransactionList = () => {
@@ -13,8 +13,8 @@ export const TransactionList = () => {
   },[isLoading]);
 
   if (isLoading) {
-    //return <LoadingSpinner loading={isLoading} />;
-    return 'loading';
+    return <LoadingSpinner loading={isLoading} />;
+    
   }
 
   return (

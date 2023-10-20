@@ -43,13 +43,12 @@ export const useGetTransactions = () => {
                     });
 
                     setTransactions(docs);
+                    setIsLoading(false);
                  });
                 
         } catch (e) {
             const error = e as Error;
             console.error(error.message);   
-        }
-        finally {
             setIsLoading(false);
         }
         return () => unsubscribe && unsubscribe();
