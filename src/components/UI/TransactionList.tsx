@@ -9,7 +9,6 @@ export const TransactionList = () => {
   const { transactions, isLoading } = useGetTransactions();
 
   useEffect(() => {
-    console.log(isLoading);
   },[isLoading]);
 
   if (isLoading) {
@@ -19,18 +18,22 @@ export const TransactionList = () => {
 
   return (
     <div className={styles.transactions}>
-      <h3>Transactions</h3>
-      <ul className={styles.transactions_ul}>
-        {transactions.map((transaction: Transaction) =>  {
-          const { description, transactionType, transactionAmount, id } = transaction;
-          return (
-            <li className={styles.transactions_li} key={id}>
-              <h4>{description}</h4>
-              <p>${transactionAmount} - <label style={{ color: transactionType === 'expense'? "red" : "green" }}>{transactionType}</label></p>
-            </li>
-          );
-        })}
-      </ul>
-     </div>
-  );
+        <h3>Transactions</h3>
+        <ul className={styles.transactions_ul}>
+            {transactions && transactions.length > 0 ? (
+                transactions.map((transaction: Transaction) => {
+                    const { description, transactionType, transactionAmount, id } = transaction;
+                    return (
+                        <li className={styles.transactions_li} key={id}>
+                            <h4>{description}</h4>
+                            <p>${transactionAmount} - <label style={{ color: transactionType === 'expense' ? "red" : "green" }}>{transactionType}</label></p>
+                        </li>
+                    );
+                })
+            ) : (
+                <li>No transactions available</li>
+            )}
+        </ul>
+    </div>
+);
 };

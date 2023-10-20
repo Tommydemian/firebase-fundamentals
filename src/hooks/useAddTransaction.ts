@@ -18,6 +18,12 @@ export const useAddTransaction = ({ description, transactionAmount, transactionT
     const transactionCollectionRef = collection(db, 'transactions');  
 
     const addTransaction = async() => {
+        // clause guard
+        if (!description || !transactionAmount || !transactionType) {
+            console.error("Invalid data: All fields are required.");
+            return;
+        }
+    
         setIsLoading(true);
         try {
             await addDoc(transactionCollectionRef, {
@@ -29,7 +35,7 @@ export const useAddTransaction = ({ description, transactionAmount, transactionT
             });
         } catch(e) {
             const error = e as Error;
-            console.error(error.message);
+            console.error("Error occurred while adding a transaction:", error.message);
         } finally {
             setIsLoading(false);
         }

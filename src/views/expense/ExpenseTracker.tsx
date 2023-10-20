@@ -1,12 +1,28 @@
+import { signOut } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 // Compoents
 import { TransactionCreator } from '../../components/container/TransactionCreator';
 import { TransactionList } from '../../components/UI/TransactionList';
 // Hooks
 import { useGetUserInfo } from '../../hooks/useGetUserInfo';
+import { useNavigate } from 'react-router-dom';
  
 export const ExpenseTracker = () => {
-  
+
+  const navigate = useNavigate();
   const { authObject } = useGetUserInfo();
+
+  const signUserOut = async() => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      navigate('/');
+    } catch (e) {
+      const error = e as Error;
+      console.error(error.message);
+      
+    }
+  };
   
   return (
     <>

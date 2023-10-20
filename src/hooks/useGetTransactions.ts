@@ -1,9 +1,3 @@
-/* 
-* Hook created to GET transactions from firestore database
-*
-*
-*/
-
 import { useState, useEffect } from 'react';
 import { query, collection, where, orderBy, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -22,8 +16,6 @@ export const useGetTransactions = () => {
         let unsubscribe: Unsubscribe;
         setIsLoading(true);
         try {
-            console.log(isLoading, 'isLoadingVal');
-            
             const transactionQuery = query(
                 transactionCollectionRef,
                  where("userID", "==", authObject?.userID),
@@ -34,7 +26,6 @@ export const useGetTransactions = () => {
 
                     const docs: Transaction[] = []; 
 
-                    console.log(snapShot);
                     snapShot.forEach((doc) => {
                         const data = doc.data();
                         const id = doc.id;
@@ -48,15 +39,21 @@ export const useGetTransactions = () => {
                 
         } catch (e) {
             const error = e as Error;
-            console.error(error.message);   
+            console.error('Error retrieving transactions', error.message);   
             setIsLoading(false);
         }
         return () => unsubscribe && unsubscribe();
     };
 
+    // useEffect(() => {
+    //   getTransactions();
+    // }, []);
+
     useEffect(() => {
-      getTransactions();
-    }, []);
+        const unsubscribe = getTransactions();
+        return () => unsubscribe && unsubscribe();
+    }, [authObject?.userID]); // Agregar dependencias aquí
+    
     
     return { transactions, isLoading }; 
 };

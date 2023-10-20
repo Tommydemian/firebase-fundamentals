@@ -1,5 +1,5 @@
 # Whats is Firebase
-- Firebase is a platform to build mobile and web applications
+- Firebase is a platform to build mobile and web applications - (BAAS) Backend As A Service
 
 [text]
 
@@ -86,7 +86,6 @@ export const useGetTransactions = () => {
 
                     const docs: Transaction[] = []; 
 
-                    console.log(snapShot);
                     snapShot.forEach((doc) => {
                         const data = doc.data();
                         const id = doc.id;
@@ -124,3 +123,5 @@ In this case:
 2. `where`/`orderBy` => funciones utilizadas dentro de `query` para filtrar y ordenar los documentos en la consulta, respectivamente.
 3. `onSnapshot` => establece un observador en tiempo real y te permite responder a los cambios. A diferencia de **getDocs** no es Async
 4. `Unsubscribe` => Función retornada por `onSnapshot` que puedes llamar para dejar de escuchar los cambios y evitar fugas de memoria o pérdidas de rendimiento.
+
+
