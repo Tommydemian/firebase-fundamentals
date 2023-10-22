@@ -3,6 +3,8 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 // Hooks
 import { useGetUserInfo } from './useGetUserInfo';
+// types
+import { Transaction } from '../types/index';
 
 type UseAddTransactionParams = {
     description: string, 
@@ -13,6 +15,7 @@ type UseAddTransactionParams = {
 export const useAddTransaction = ({ description, transactionAmount, transactionType }: UseAddTransactionParams) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [newTransaction, setNewTransaction] = useState<Transaction>();
 
     const { authObject } = useGetUserInfo();
     const transactionCollectionRef = collection(db, 'transactions');  
@@ -26,13 +29,14 @@ export const useAddTransaction = ({ description, transactionAmount, transactionT
     
         setIsLoading(true);
         try {
-            await addDoc(transactionCollectionRef, {
+            const docRef = await addDoc(transactionCollectionRef, {
                 userID: authObject?.userID || '',
                 description: description, 
                 transactionAmount: transactionAmount, 
                 transactionType: transactionType, 
                 createdAt: serverTimestamp()
             });
+            setNewTransaction({ id: docRef.id, userID: authObject?.userID, transactionAmount: transactionAmount, transactionType: transactionType, description: description });
         } catch(e) {
             const error = e as Error;
             console.error("Error occurred while adding a transaction:", error.message);
@@ -41,5 +45,5 @@ export const useAddTransaction = ({ description, transactionAmount, transactionT
         }
     };
 
-    return { addTransaction, isLoading };
+    return { addTransaction, isLoading, newTransaction };
 };

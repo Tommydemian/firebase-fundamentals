@@ -9,9 +9,9 @@ export type AuthInfo = {
 
 export type Transaction = {
   id?: string;
-  userID: string,
+  userID: string | undefined;
   description: string, 
-  transactionAmount: string, 
+  transactionAmount: string | number, 
   transactionType: string, 
-  createdAt: Timestamp
+  createdAt?: Timestamp
 }

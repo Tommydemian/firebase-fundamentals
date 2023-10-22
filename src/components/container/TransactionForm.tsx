@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Components
 import { LoadingSpinner } from '../UI/LoadingSpinner';
+// Redux
+import { useDispatch } from 'react-redux';
+import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
 
 export const TransactionForm: React.FC = () => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const [type, setType] = useState<'expense' | 'income'>('expense');
 
+  const dispatch = useDispatch();
+
   // currying to handleChange
   const handleChange = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (e: React.ChangeEvent<HTMLInputElement> ) => {
     setter(e.target.value as unknown as T); 
   };
 
-  const { addTransaction, isLoading } = useAddTransaction({ description, transactionAmount: amount, transactionType: type });
+  const { addTransaction, isLoading, newTransaction } = useAddTransaction({ description, transactionAmount: amount, transactionType: type });
 
+  useEffect(() => {
+    if (newTransaction) {
+      dispatch(addTransactionToRedux(newTransaction));
+    }
+  }, [newTransaction, dispatch]);
+
+  
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // create transaction document
     addTransaction();
   };
 

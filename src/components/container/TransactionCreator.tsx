@@ -16,15 +16,15 @@ export const TransactionCreator = () => {
     // Filter all [income] transactions type and map the value into a new Array
     const totalIncomeVal = useMemo(() => {
       const allIncomeArr = transactions.filter(transaction => transaction.transactionType === 'income')
-      .map(el => el.transactionAmount);
+      .map(el => String(el.transactionAmount));
       // calculate total amount and set it to the income state
-      return calculateTotal(allIncomeArr);
+      return calculateTotal((allIncomeArr));
     }, [transactions]);
 
     // Filter all [expense] transactions type and map the value into a new Array  
     const totalExpensesVal = useMemo(() => {
       const allExpensesArr = transactions.filter(transaction => transaction.transactionType === 'expense')
-      .map(el => el.transactionAmount);
+      .map(el => String(el.transactionAmount));
       
       // calculate total amount and set it to the expenses state
       return calculateTotal(allExpensesArr);
