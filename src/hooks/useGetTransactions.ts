@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useAppDispatch } from '../hooks/useAppDispatch';
 import { query, collection, where, orderBy, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useGetUserInfo } from '../hooks/useGetUserInfo';
 import { Transaction } from '../types/index';
+import { setLoading } from '../features/transactions/transactionSlice';
 
 export const useGetTransactions = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useAppDispatch();
 
     const transactionCollectionRef = collection(db, 'transactions');
     const { authObject } = useGetUserInfo();
@@ -14,7 +17,7 @@ export const useGetTransactions = () => {
     // function to get transactions from the database
     const getTransactions = () => {
         let unsubscribe: Unsubscribe;
-        setIsLoading(true);
+        dispatch(setLoading(true));
         try {
             const transactionQuery = query(
                 transactionCollectionRef,
@@ -34,26 +37,22 @@ export const useGetTransactions = () => {
                     });
 
                     setTransactions(docs);
-                    setIsLoading(false);
+                    dispatch(setLoading(false));
                  });
                 
         } catch (e) {
             const error = e as Error;
             console.error('Error retrieving transactions', error.message);   
-            setIsLoading(false);
+            dispatch(setLoading(false));
         }
         return () => unsubscribe && unsubscribe();
     };
 
-    // useEffect(() => {
-    //   getTransactions();
-    // }, []);
-
     useEffect(() => {
         const unsubscribe = getTransactions();
         return () => unsubscribe && unsubscribe();
-    }, [authObject?.userID]); // Agregar dependencias aquí
+    }, [authObject?.userID]);
     
     
-    return { transactions, isLoading }; 
+    return { transactions }; 
 };

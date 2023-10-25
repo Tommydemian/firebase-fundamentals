@@ -3,7 +3,7 @@ import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Components
 import { LoadingSpinner } from '../UI/LoadingSpinner';
 // Redux
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
 
 export const TransactionForm: React.FC = () => {
@@ -11,7 +11,7 @@ export const TransactionForm: React.FC = () => {
   const [amount, setAmount] = useState(0);
   const [type, setType] = useState<'expense' | 'income'>('expense');
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // currying to handleChange
   const handleChange = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (e: React.ChangeEvent<HTMLInputElement> ) => {

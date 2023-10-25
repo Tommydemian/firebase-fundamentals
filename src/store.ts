@@ -5,5 +5,9 @@ export const store = configureStore({
     reducer: {
         transactions: transactionsReducer
     }, 
-    devTools: true
+  devTools: true
 });
+
+export type RootState = ReturnType<typeof store.getState> 
+    
+export type AppDispatch = typeof store.dispatch

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useAppDispatch } from '../hooks/useAppDispatch';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 // Hooks
 import { useGetUserInfo } from './useGetUserInfo';
+// Slice
+import { setLoading } from '../features/transactions/transactionSlice';
 // types
 import { Transaction } from '../types/index';
 
@@ -14,20 +17,28 @@ type UseAddTransactionParams = {
 
 export const useAddTransaction = ({ description, transactionAmount, transactionType }: UseAddTransactionParams) => {
 
-    const [isLoading, setIsLoading] = useState(false);
     const [newTransaction, setNewTransaction] = useState<Transaction>();
+
+    const dispatch = useAppDispatch();
 
     const { authObject } = useGetUserInfo();
     const transactionCollectionRef = collection(db, 'transactions');  
 
+ /**
+ * Asynchronously adds a new transaction to the database.
+ * Handles validation, state management, and error logging.
+ * 
+ * @async
+ * @function addTransaction
+ * @returns {void}
+ */
     const addTransaction = async() => {
         // clause guard
         if (!description || !transactionAmount || !transactionType) {
             console.error("Invalid data: All fields are required.");
             return;
         }
-    
-        setIsLoading(true);
+        dispatch(setLoading(true));
         try {
             const docRef = await addDoc(transactionCollectionRef, {
                 userID: authObject?.userID || '',
@@ -41,9 +52,9 @@ export const useAddTransaction = ({ description, transactionAmount, transactionT
             const error = e as Error;
             console.error("Error occurred while adding a transaction:", error.message);
         } finally {
-            setIsLoading(false);
+            dispatch(setLoading(false));
         }
     };
 
-    return { addTransaction, isLoading, newTransaction };
+    return { addTransaction, newTransaction };
 };

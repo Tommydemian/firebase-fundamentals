@@ -5,8 +5,17 @@ import { Transaction } from '../../types/index';
 import { LoadingSpinner } from './LoadingSpinner';
 import styles from './transaction-list.module.css';
 
+import { useAppSelector } from '../../hooks/useAppSelector';
+
 export const TransactionList = () => {
-  const { transactions, isLoading } = useGetTransactions();
+  const { transactions } = useGetTransactions();
+
+//   const transactions = useAppSelector(state => state.transactions.entities);
+  const isLoading = useAppSelector(state => state.transactions.loading);
+
+  useEffect(() => {
+    console.log(transactions);
+  }, [transactions]);
 
   useEffect(() => {
   },[isLoading]);
