@@ -6,13 +6,16 @@ provider => result of new GoogleAuthProvider()
 import { auth, provider } from '../../config/firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+// Hooks 
+import { useAppDispatch } from '../../hooks/redux/useRedux';
+import { setUserInfo } from '../../features/auth/authSlice';
 // Types
 import { AuthInfo } from '../../types/index';
 
 export const Auth = () => {
 
   const [errorMssg, setErrorMssg] = useState('');
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
  
   const signInWithGoogle = async () => {
@@ -23,7 +26,10 @@ export const Auth = () => {
         name: res.user.displayName || 'Default user', 
         profilePhoto: res.user.photoURL, 
         isAuth: true 
-      }; 
+      };
+      
+      dispatch(setUserInfo(authInfo));
+      
       const authInfoStr = JSON.stringify(authInfo);
       localStorage.setItem('auth', authInfoStr);
       navigate('/expense-tracker');

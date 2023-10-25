@@ -22,10 +22,16 @@ const transactionsSlice = createSlice({
         },
         addTransactionToRedux: (state, action: PayloadAction<Transaction>) => {
             state.entities.push(action.payload);
-        }
+        },
+        removeTransactionFromRedux: (state, action: PayloadAction<string>) => {
+            const index = state.entities.findIndex(transaction => transaction.id === action.payload);
+            if (index !== -1) {
+                state.entities.splice(index, 1);
+            }
+        }        
     }
 });
 
-export const { addTransactionToRedux, setLoading } = transactionsSlice.actions;
+export const { addTransactionToRedux, setLoading, removeTransactionFromRedux } = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;

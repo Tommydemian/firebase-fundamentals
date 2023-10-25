@@ -5,16 +5,22 @@ import { TransactionCreator } from '../../components/container/TransactionCreato
 import { TransactionList } from '../../components/UI/TransactionList';
 // Hooks
 import { useGetUserInfo } from '../../hooks/useGetUserInfo';
+import { useAppDispatch } from '../../hooks/redux/useRedux';
 import { useNavigate } from 'react-router-dom';
+// Slice
+import { clearUserInfo } from '../../features/auth/authSlice';
+
  
 export const ExpenseTracker = () => {
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { authObject } = useGetUserInfo();
 
   const signUserOut = async() => {
     try {
       await signOut(auth);
+      dispatch(clearUserInfo());
       localStorage.clear();
       navigate('/');
     } catch (e) {

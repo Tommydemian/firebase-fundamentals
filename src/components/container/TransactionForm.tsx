@@ -3,7 +3,7 @@ import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Components
 import { LoadingSpinner } from '../UI/LoadingSpinner';
 // Redux
-import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppDispatch } from '../../hooks/redux/useRedux';
 import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
 
 export const TransactionForm: React.FC = () => {

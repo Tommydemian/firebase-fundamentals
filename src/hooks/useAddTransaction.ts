@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAppDispatch } from '../hooks/useAppDispatch';
+import { useAppDispatch } from '../hooks/redux/useRedux';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 // Hooks

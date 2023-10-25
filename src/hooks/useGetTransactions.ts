@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAppDispatch } from '../hooks/useAppDispatch';
+import { useAppDispatch } from '../hooks/redux/useRedux';
 import { query, collection, where, orderBy, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useGetUserInfo } from '../hooks/useGetUserInfo';
