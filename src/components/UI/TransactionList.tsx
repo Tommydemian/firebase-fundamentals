@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 // Hooks
 import { useGetTransactions } from '../../hooks/useGetTransactions';
 import { useDeleteTransaction } from '../../hooks/useDeleteTransaction';
@@ -17,18 +18,23 @@ export const TransactionList = () => {
   const { transactions } = useGetTransactions();
 
   // Get loading state from Redux
-  const isLoading = useAppSelector(state => state.transactions.loading);
+  const isLoading = useAppSelector(state => state.transactions.loadingGetTransactions);
 
   // Hook to handle the deletion of transactions
   const { deleteTransaction } = useDeleteTransaction();
 
   // Dispatch function to interact with Redux store
   const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    console.log(transactions);
+  }, [transactions]);
 
   // Render loading spinner while transactions are being fetched
   if (isLoading) {
     return <LoadingSpinner loading={isLoading} />;
   }
+
 
   return (
     <div className={styles.transactions}>
@@ -39,7 +45,7 @@ export const TransactionList = () => {
             const { description, transactionType, transactionAmount, id } = transaction;
             return (
               <>
-                <li className={styles.transactions_li} key={id}>
+                <li className={styles.transactions_li}>
                   <h4>{description}</h4>
                   <p>${transactionAmount} - <label style={{ color: transactionType === 'expense' ? "red" : "green" }}>{transactionType}</label></p>
                 </li>

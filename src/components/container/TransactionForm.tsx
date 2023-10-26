@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useAddTransaction } from '../../hooks/useAddTransaction';
+import React, { useState } from 'react';
+// import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Components
 import { LoadingSpinner } from '../UI/LoadingSpinner';
 // Redux
-import { useAppDispatch } from '../../hooks/redux/useRedux';
-import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux/useRedux';
+import { useGetUserInfo } from '../../hooks/useGetUserInfo';
+// import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
+// Slice/s
+import { addTransaction } from '../../features/transactions/transactionSlice';
+
 
 export const TransactionForm: React.FC = () => {
   const [description, setDescription] = useState('');
@@ -13,24 +17,19 @@ export const TransactionForm: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
+  const { authObject } = useGetUserInfo();
+  const isLoading = useAppSelector(state => state.transactions.loadingAddTransaction);
+  
+
   // currying to handleChange
   const handleChange = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (e: React.ChangeEvent<HTMLInputElement> ) => {
     setter(e.target.value as unknown as T); 
   };
-
-  const { addTransaction, isLoading, newTransaction } = useAddTransaction({ description, transactionAmount: amount, transactionType: type });
-
-  useEffect(() => {
-    if (newTransaction) {
-      dispatch(addTransactionToRedux(newTransaction));
-    }
-  }, [newTransaction, dispatch]);
-
   
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // create transaction document
-    addTransaction();
+    // create transaction document and add it to Redux
+    dispatch(addTransaction({ userID: authObject?.userID || '', transactionAmount:amount, transactionType:type, description }));
   };
 
   if (isLoading) { 
