@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 // Hooks
 import { useGetTransactions } from '../../hooks/useGetTransactions';
 import { useDeleteTransaction } from '../../hooks/useDeleteTransaction';
@@ -25,10 +25,6 @@ export const TransactionList = () => {
 
   // Dispatch function to interact with Redux store
   const dispatch = useAppDispatch();
-  
-  useEffect(() => {
-    console.log(transactions);
-  }, [transactions]);
 
   // Render loading spinner while transactions are being fetched
   if (isLoading) {
@@ -44,7 +40,7 @@ export const TransactionList = () => {
           transactions.map((transaction: Transaction) => {
             const { description, transactionType, transactionAmount, id } = transaction;
             return (
-              <>
+              <React.Fragment key={id}>
                 <li className={styles.transactions_li}>
                   <h4>{description}</h4>
                   <p>${transactionAmount} - <label style={{ color: transactionType === 'expense' ? "red" : "green" }}>{transactionType}</label></p>
@@ -56,7 +52,7 @@ export const TransactionList = () => {
                 }}>
                   Delete transaction
                 </button>
-              </>
+              </React.Fragment>
             );
           })
         ) : (

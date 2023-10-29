@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { useAddTransaction } from '../../hooks/useAddTransaction';
 // Components
 import { LoadingSpinner } from '../UI/LoadingSpinner';
@@ -6,9 +6,10 @@ import { LoadingSpinner } from '../UI/LoadingSpinner';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux/useRedux';
 import { useGetUserInfo } from '../../hooks/useGetUserInfo';
 // import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
-// Slice/s
-import { addTransaction } from '../../features/transactions/transactionSlice';
-
+// Slice/s => Thunk
+ import { addTransactionToRedux } from '../../features/transactions/transactionSlice';
+// RTK Query
+import { useAddTransactionMutation } from '../../services/transactionService';
 
 export const TransactionForm: React.FC = () => {
   const [description, setDescription] = useState('');
@@ -18,8 +19,14 @@ export const TransactionForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { authObject } = useGetUserInfo();
-  const isLoading = useAppSelector(state => state.transactions.loadingAddTransaction);
-  
+  const loading = useAppSelector(state => state.transactions.loadingAddTransaction);
+
+  //[1rts el => mutation trigger, {isLoading, error, data}: MutationResult ] = useMutation()
+  const [addTransaction, { isLoading, error, data }] = useAddTransactionMutation();
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   // currying to handleChange
   const handleChange = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (e: React.ChangeEvent<HTMLInputElement> ) => {
@@ -28,12 +35,29 @@ export const TransactionForm: React.FC = () => {
   
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // create transaction document and add it to Redux
-    dispatch(addTransaction({ userID: authObject?.userID || '', transactionAmount:amount, transactionType:type, description }));
+    try {
+      // create Doc
+      await addTransaction({ description, transactionAmount:amount, transactionType: type, userID: authObject?.userID || '' });
+      
+      if (data) {
+        // If the mutation is successful, update the local Redux state
+        dispatch(addTransactionToRedux({ id: data.id, description, transactionAmount: amount, transactionType: type, userID: authObject?.userID }));
+      } else if (error) {
+        // Handle the error accordingly
+        console.error(error);
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error(error);
+    }
   };
 
-  if (isLoading) { 
-    return <LoadingSpinner loading={isLoading} />;
+  if (isLoading && loading) { 
+    return <LoadingSpinner loading={loading && isLoading} />;
+  }
+
+  if (error) { 
+    return 'Error';
   }
 
   return (

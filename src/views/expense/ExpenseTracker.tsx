@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 // Compoents
@@ -9,9 +10,12 @@ import { useAppDispatch } from '../../hooks/redux/useRedux';
 import { useNavigate } from 'react-router-dom';
 // Slice
 import { clearUserInfo } from '../../features/auth/authSlice';
+import { ThemeContext } from '../../contexts/theme-context';
 
  
 export const ExpenseTracker = () => {
+
+  const { theme, setTheme } = useContext(ThemeContext);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,6 +47,7 @@ export const ExpenseTracker = () => {
       </div>
       </div>
       <TransactionList />
+      {theme}
       </>
   );
 };

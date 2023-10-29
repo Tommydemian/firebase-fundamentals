@@ -1,6 +1,5 @@
 # Redux toolkit
 1. Store
-
 2. Slice 
 
 # Async thunk:
@@ -14,13 +13,6 @@
  4. Redux Saga
 
  - **Redux Toolkit - async thunk** => good from *Redux thunk* + good from *createAction* => initial/legacy Redux
-
-
-- There's a difference between firing a request and hearing that it came back. => those are actions. 
-
- ## RTK Query
- 1. API Calls 
- 2. Caching
 
  - The thunk function happens outside from this object:
  ```javascript
@@ -49,3 +41,10 @@
   2. builder.addCase(case.fullfiled)
   3. builder.addCase(case.rejected)
 
+  
+# RTK Query
+- It's built on top of Redux => **everything is an action**
+ 1. API Calls 
+ 2. Caching
+
+folder structure => *src/services*
